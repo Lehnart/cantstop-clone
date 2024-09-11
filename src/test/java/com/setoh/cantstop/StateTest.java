@@ -26,4 +26,87 @@ public class StateTest {
         }
         assertThatThrownBy( () -> state.getPlayerHeight(1)).isInstanceOf(IllegalArgumentException.class).hasMessageContaining("Column 1 is not a valid column key.");
     }
+
+    @Test
+    public void testTemporaryProgress(){
+        State state = new State();
+        assertThat(state.getTemporaryHeights()).isEmpty();
+        state.temporaryProgress(2);
+        assertThat(state.getTemporaryHeights()).hasSize(1);
+        assertThat(state.getTemporaryHeights()).containsOnly(Map.entry(2, 1));
+        state.temporaryProgress(2);
+        assertThat(state.getTemporaryHeights()).hasSize(1);
+        assertThat(state.getTemporaryHeights()).containsOnly(Map.entry(2, 2));
+        state.temporaryProgress(5);
+        assertThat(state.getTemporaryHeights()).hasSize(2);
+        assertThat(state.getTemporaryHeights()).containsOnly(Map.entry(2, 2), Map.entry(5,1));
+    }
+
+    @Test
+    public void testProgress(){
+        State state = new State();
+        assertThat(state.getTemporaryHeights()).isEmpty();
+        state.progress();
+        assertThat(state.getTemporaryHeights()).isEmpty();
+        for(int column : state.columns()){
+            assertThat(state.getPlayerHeight(column)).isZero();
+        }
+        state.temporaryProgress(2);
+        state.temporaryProgress(2);
+        state.temporaryProgress(5);
+        state.progress();
+        assertThat(state.getTemporaryHeights()).isEmpty();
+        for(int column : state.columns()){
+            if (column == 2){
+                assertThat(state.getPlayerHeight(column)).isEqualTo(2);
+            }
+            else if (column == 5){
+                assertThat(state.getPlayerHeight(column)).isEqualTo(1);
+            }
+            else{
+                assertThat(state.getPlayerHeight(column)).isZero();
+            }            
+        }
+        state.temporaryProgress(2);
+        state.temporaryProgress(2);
+        state.temporaryProgress(5);
+        state.progress();
+        assertThat(state.getTemporaryHeights()).isEmpty();
+        for(int column : state.columns()){
+            if (column == 2){
+                assertThat(state.getPlayerHeight(column)).isEqualTo(4);
+            }
+            else if (column == 5){
+                assertThat(state.getPlayerHeight(column)).isEqualTo(2);
+            }
+            else{
+                assertThat(state.getPlayerHeight(column)).isZero();
+            }            
+        }
+    }
+
+    @Test
+    public void testIsColumnClaimed(){
+        State state = new State();
+        for(int column : state.columns()){
+            assertThat(state.isColumnClaimed(column)).isFalse();
+        }
+        state.temporaryProgress(2);
+        state.temporaryProgress(2);
+        state.temporaryProgress(2);
+        state.progress();
+        for(int column : state.columns()){
+            assertThat(state.isColumnClaimed(column)).isFalse();
+        }
+        state.temporaryProgress(2);
+        state.progress();
+        for(int column : state.columns()){
+            if( column == 2 ){
+                assertThat(state.isColumnClaimed(column)).isTrue();
+            }
+            else{
+                assertThat(state.isColumnClaimed(column)).isFalse();
+            }            
+        }
+    }
 }
