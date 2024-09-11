@@ -30,7 +30,7 @@ public class State {
 
     public int getPlayerHeight(int column) {
         if (!columns().contains(column)) {
-            throw new IllegalArgumentException("Column " + column + "is not a valid column key.");
+            throw new IllegalArgumentException("Column " + column + " is not a valid column key.");
         }
         return playerHeightsPerColumn.get(column);
     }
