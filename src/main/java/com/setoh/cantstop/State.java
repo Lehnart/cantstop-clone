@@ -6,7 +6,7 @@ import java.util.Set;
 
 public class State {
 
-    public final static Map<Integer, Integer> COLUMN_HEIGHTS = Map.ofEntries(
+    public static final Map<Integer, Integer> COLUMN_HEIGHTS = Map.ofEntries(
             Map.entry(2, 3), Map.entry(3, 5), Map.entry(4, 7), Map.entry(5, 9), Map.entry(6, 11), Map.entry(7, 13),
             Map.entry(8, 11), Map.entry(9, 9), Map.entry(10, 7), Map.entry(11, 5), Map.entry(12, 3)
     );
@@ -19,9 +19,6 @@ public class State {
     private final Map<Integer, Integer> temporaryHeights = new HashMap<>();
 
     private int turn = 1;
-
-    public State() {
-    }
 
     public Set<Integer> columns() {
         return COLUMN_HEIGHTS.keySet();
