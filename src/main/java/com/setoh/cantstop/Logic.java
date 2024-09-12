@@ -11,7 +11,7 @@ public class Logic {
     private RandomAIPlayer aiPlayer;
 
     public Logic(){
-        aiPlayer = new RandomAIPlayer();
+        aiPlayer = new RandomAIPlayer(0.5);
     }
 
     public DiceCombination play(State state){
