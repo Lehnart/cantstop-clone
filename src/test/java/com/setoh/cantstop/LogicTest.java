@@ -114,4 +114,14 @@ public class LogicTest {
         assertThat(diceCombination.getSecondSum()).isEqualTo(7);
     }
 
+    @Test 
+    public void testPlay(){
+        State state = new State();
+        Logic logic = new Logic();
+        DiceCombination combination = logic.play(state);
+        assertThat(combination.dice1()).isPositive().isLessThanOrEqualTo(6);
+        assertThat(combination.dice2()).isPositive().isLessThanOrEqualTo(6);
+        assertThat(combination.dice3()).isPositive().isLessThanOrEqualTo(6);
+        assertThat(combination.dice4()).isPositive().isLessThanOrEqualTo(6); 
+    }
 }

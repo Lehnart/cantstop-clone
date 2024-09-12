@@ -8,7 +8,17 @@ public class Logic {
     
     private static Random random = new Random();
 
-    private Logic(){}
+    private RandomAIPlayer aiPlayer;
+
+    public Logic(){
+        aiPlayer = new RandomAIPlayer(0.5);
+    }
+
+    public DiceCombination play(State state){
+        List<Integer> dices = rollDices();
+        List<DiceCombination> validCombinations = validCombinations(dices, state);
+        return aiPlayer.chooseCombination(validCombinations);
+    }
 
     public static List<DiceCombination> validCombinations(List<Integer> dices, State state){
         DiceCombination c1 = new DiceCombination(dices.get(0), dices.get(1), dices.get(2), dices.get(3));
