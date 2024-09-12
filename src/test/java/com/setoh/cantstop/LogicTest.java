@@ -12,7 +12,7 @@ public class LogicTest {
     @Test 
     public void testValidCombinationWhenAllCombinationsAreValid(){
         State state = new State();
-        List<DiceCombination> combinations = Logic.validCombinations(List.of(1,2,3,4), state);
+        List<DiceCombination> combinations = Logic.getValidCombinationsOnly(List.of(1,2,3,4), state);
         assertThat(combinations).hasSize(3);
         assertThat(combinations.get(0).dice1()).isEqualTo(1);
         assertThat(combinations.get(0).dice2()).isEqualTo(2);
@@ -36,7 +36,7 @@ public class LogicTest {
         state.temporaryProgress(2);
         state.temporaryProgress(2);
         state.progress();
-        List<DiceCombination> combinations = Logic.validCombinations(List.of(1,1,1,1), state);
+        List<DiceCombination> combinations = Logic.getValidCombinationsOnly(List.of(1,1,1,1), state);
         assertThat(combinations).isEmpty();
     }
 
@@ -115,13 +115,21 @@ public class LogicTest {
     }
 
     @Test 
-    public void testPlay(){
+    public void testPlayAlwaysFail(){
         State state = new State();
-        Logic logic = new Logic();
-        DiceCombination combination = logic.play(state);
-        assertThat(combination.dice1()).isPositive().isLessThanOrEqualTo(6);
-        assertThat(combination.dice2()).isPositive().isLessThanOrEqualTo(6);
-        assertThat(combination.dice3()).isPositive().isLessThanOrEqualTo(6);
-        assertThat(combination.dice4()).isPositive().isLessThanOrEqualTo(6); 
+        Logic logic = new Logic(new RandomAIPlayer(1.));
+        logic.play(state);
+        for(int column : state.columns()){
+            assertThat(state.getPlayerHeight(column)).isZero();
+        }
     }
+
+    @Test 
+    public void testPlayAlwaysStop(){
+        State state = new State();
+        Logic logic = new Logic(new RandomAIPlayer(0.));
+        logic.play(state);
+        assertThat(state.columns().stream().map(c -> state.getPlayerHeight(c)).anyMatch(h -> h > 0)).isTrue();
+    }
+
 }

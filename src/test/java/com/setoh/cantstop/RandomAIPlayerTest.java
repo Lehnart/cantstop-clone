@@ -16,11 +16,10 @@ public class RandomAIPlayerTest {
         assertThat(alwaysStoppingAi.shouldContinue()).isFalse();
         RandomAIPlayer alwaysContinuingAi = new RandomAIPlayer(0.);
         assertThat(alwaysContinuingAi.shouldContinue()).isTrue();
-        
     }
 
     @Test
-    public void testRandomAIPlayerPlays() {
+    public void testPlays() {
         RandomAIPlayer aiPlayer = new RandomAIPlayer(0.5);
         List<DiceCombination> combinations = List.of(new DiceCombination(1,2,3,4));
         DiceCombination combination = aiPlayer.chooseCombination(combinations);
@@ -28,5 +27,13 @@ public class RandomAIPlayerTest {
         assertThat(combination.dice2()).isEqualTo(2);
         assertThat(combination.dice3()).isEqualTo(3);
         assertThat(combination.dice4()).isEqualTo(4);
+    }
+
+    @Test
+    public void testPlaysWithEmptyValidCombinations() {
+        RandomAIPlayer aiPlayer = new RandomAIPlayer(0.5);
+        List<DiceCombination> combinations = List.of();
+        DiceCombination combination = aiPlayer.chooseCombination(combinations);
+        assertThat(combination).isNull();
     }
 }

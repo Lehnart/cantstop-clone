@@ -56,4 +56,8 @@ public class State {
         }
         temporaryHeights.clear();
     }
+
+    public void failToProgress() {
+        temporaryHeights.clear();
+    }
 }

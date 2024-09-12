@@ -13,7 +13,11 @@ public class RandomAIPlayer {
     public RandomAIPlayer(double probability){
         continuingProbability = probability;
     }
+
     public DiceCombination chooseCombination(List<DiceCombination> combinations ){
+        if(combinations.isEmpty()){
+            return null;
+        }
         return combinations.get(random.nextInt(combinations.size()));
     }
 

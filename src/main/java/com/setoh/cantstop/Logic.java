@@ -10,17 +10,31 @@ public class Logic {
 
     private RandomAIPlayer aiPlayer;
 
-    public Logic(){
-        aiPlayer = new RandomAIPlayer(0.5);
+    public Logic(RandomAIPlayer aiPlayer){
+        this.aiPlayer = aiPlayer;
     }
 
-    public DiceCombination play(State state){
-        List<Integer> dices = rollDices();
-        List<DiceCombination> validCombinations = validCombinations(dices, state);
-        return aiPlayer.chooseCombination(validCombinations);
+    public void play(State state){
+        DiceCombination combination;
+        do{
+            List<Integer> dices = rollDices();
+            List<DiceCombination> validCombinations = getValidCombinationsOnly(dices, state);
+            combination = aiPlayer.chooseCombination(validCombinations);   
+            if(combination != null){
+                state.temporaryProgress(combination.getFirstSum());
+                state.temporaryProgress(combination.getSecondSum());
+            }
+        } while( combination != null && aiPlayer.shouldContinue() );
+        
+        if( combination != null ){
+            state.progress();
+        }
+        else{
+            state.failToProgress();
+        }
     }
 
-    public static List<DiceCombination> validCombinations(List<Integer> dices, State state){
+    public static List<DiceCombination> getValidCombinationsOnly(List<Integer> dices, State state){
         DiceCombination c1 = new DiceCombination(dices.get(0), dices.get(1), dices.get(2), dices.get(3));
         DiceCombination c2 = new DiceCombination(dices.get(0), dices.get(2), dices.get(1), dices.get(3));
         DiceCombination c3 = new DiceCombination(dices.get(0), dices.get(3), dices.get(1), dices.get(2));
