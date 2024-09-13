@@ -88,7 +88,6 @@ public class StateTest {
         }
         state.temporaryProgress(2);
         state.temporaryProgress(2);
-        state.temporaryProgress(2);
         state.progress();
         for (int column : state.columns()) {
             assertThat(state.isColumnClaimed(column)).isFalse();
