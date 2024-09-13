@@ -12,14 +12,14 @@ public class LogicTest {
     @Test
     public void testColumnToProgressWhenAllCombinationsAreValid() {
         State state = new State();
-        List<List<Integer>> combinations = Logic.getColumnsToProgress(List.of(1,2,3,4), state);
+        List<List<Integer>> combinations = Logic.getColumnsToProgress(List.of(1, 2, 3, 4), state);
         assertThat(combinations).hasSize(3);
         assertThat(combinations.get(0)).hasSize(2);
-        assertThat(combinations.get(0)).containsExactly(3,7);
+        assertThat(combinations.get(0)).containsExactly(3, 7);
         assertThat(combinations.get(1)).hasSize(2);
-        assertThat(combinations.get(1)).containsExactly(4,6);
+        assertThat(combinations.get(1)).containsExactly(4, 6);
         assertThat(combinations.get(2)).hasSize(2);
-        assertThat(combinations.get(2)).containsExactly(5,5);
+        assertThat(combinations.get(2)).containsExactly(5, 5);
     }
 
     @Test
@@ -51,7 +51,7 @@ public class LogicTest {
         assertThat(combinations.get(1)).containsExactly(7);
         assertThat(combinations.get(2)).containsExactly(4);
         assertThat(combinations.get(3)).containsExactly(6);
-        assertThat(combinations.get(4)).containsExactly(5,5);
+        assertThat(combinations.get(4)).containsExactly(5, 5);
     }
 
     @Test
@@ -129,21 +129,28 @@ public class LogicTest {
     }
 
     @Test
-    public void testPlayAlwaysFail() {
+    public void testPlayTurnAlwaysFail() {
         State state = new State();
         Logic logic = new Logic(new RandomAIPlayer(1.));
-        logic.play(state);
+        logic.playTurn(state);
         for (int column : state.columns()) {
             assertThat(state.getPlayerHeight(column)).isZero();
         }
     }
 
     @Test
-    public void testPlayAlwaysStop() {
+    public void testPlayTurnAlwaysStop() {
         State state = new State();
         Logic logic = new Logic(new RandomAIPlayer(0.));
-        logic.play(state);
+        logic.playTurn(state);
         assertThat(state.columns().stream().map(c -> state.getPlayerHeight(c)).anyMatch(h -> h > 0)).isTrue();
+    }
+
+    @Test
+    public void testPlayGame() {
+        Logic logic = new Logic(new RandomAIPlayer(0.5));
+        State state = logic.playGame();
+        assertThat(state.getColumnClaimedCount()).isGreaterThanOrEqualTo(3);
     }
 
 }

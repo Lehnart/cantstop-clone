@@ -58,4 +58,14 @@ public class State {
     public void failToProgress() {
         temporaryHeights.clear();
     }
+
+    public int getColumnClaimedCount() {
+        int count = 0;
+        for(int column : columns()){
+            if(isColumnClaimed(column)){
+                count += 1;
+            }
+        }
+        return count;
+    }
 }
