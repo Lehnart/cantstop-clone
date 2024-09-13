@@ -40,7 +40,7 @@ public class State {
     }
 
     public boolean isColumnClaimed(int column) {
-        return getPlayerHeight(column) > COLUMN_HEIGHTS.get(column);
+        return getPlayerHeight(column) >= COLUMN_HEIGHTS.get(column);
     }
 
     public void temporaryProgress(int column) {

@@ -75,7 +75,7 @@ public class Logic {
         Map<Integer, Integer> temporaryHeights = state.getTemporaryHeights();
         for (int column : columns) {
             if (temporaryHeights.containsKey(column)) {
-                if (temporaryHeights.get(column) > State.COLUMN_HEIGHTS.get(column)) {
+                if (temporaryHeights.get(column) >= State.COLUMN_HEIGHTS.get(column)) {
                     return false;
                 }
                 temporaryHeights.put(column, temporaryHeights.get(column) + 1);
