@@ -6,22 +6,22 @@ import java.util.Random;
 import com.setoh.cantstop.Logic.DiceCombination;
 
 public class RandomAIPlayer {
-    
+
     private Random random = new Random();
     private double continuingProbability;
 
-    public RandomAIPlayer(double probability){
+    public RandomAIPlayer(double probability) {
         continuingProbability = probability;
     }
 
-    public DiceCombination chooseCombination(List<DiceCombination> combinations ){
-        if(combinations.isEmpty()){
-            return null;
+    public List<Integer> chooseCombination(List<List<Integer>> columnsToProgress) {
+        if (columnsToProgress.isEmpty()) {
+            return List.of();
         }
-        return combinations.get(random.nextInt(combinations.size()));
+        return columnsToProgress.get(random.nextInt(columnsToProgress.size()));
     }
 
-    public boolean shouldContinue(){
-        return random.nextDouble() > continuingProbability;
+    public boolean shouldContinue() {
+        return random.nextDouble() < continuingProbability;
     }
 }

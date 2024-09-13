@@ -8,15 +8,13 @@ public class State {
 
     public static final Map<Integer, Integer> COLUMN_HEIGHTS = Map.ofEntries(
             Map.entry(2, 3), Map.entry(3, 5), Map.entry(4, 7), Map.entry(5, 9), Map.entry(6, 11), Map.entry(7, 13),
-            Map.entry(8, 11), Map.entry(9, 9), Map.entry(10, 7), Map.entry(11, 5), Map.entry(12, 3)
-    );
+            Map.entry(8, 11), Map.entry(9, 9), Map.entry(10, 7), Map.entry(11, 5), Map.entry(12, 3));
 
     private final Map<Integer, Integer> playerHeightsPerColumn = new HashMap<>(
-        Map.ofEntries(
-            Map.entry(2, 0), Map.entry(3, 0), Map.entry(4, 0), Map.entry(5, 0), Map.entry(6, 0), Map.entry(7, 0),
-            Map.entry(8, 0), Map.entry(9, 0), Map.entry(10, 0), Map.entry(11, 0), Map.entry(12, 0)
-        )
-    );
+            Map.ofEntries(
+                    Map.entry(2, 0), Map.entry(3, 0), Map.entry(4, 0), Map.entry(5, 0), Map.entry(6, 0),
+                    Map.entry(7, 0),
+                    Map.entry(8, 0), Map.entry(9, 0), Map.entry(10, 0), Map.entry(11, 0), Map.entry(12, 0)));
 
     private final Map<Integer, Integer> temporaryHeights = new HashMap<>();
 
@@ -45,13 +43,13 @@ public class State {
         return getPlayerHeight(column) > COLUMN_HEIGHTS.get(column);
     }
 
-    public void temporaryProgress(int column){
+    public void temporaryProgress(int column) {
         temporaryHeights.putIfAbsent(column, playerHeightsPerColumn.get(column));
         temporaryHeights.put(column, temporaryHeights.get(column) + 1);
     }
 
-    public void progress(){
-        for( Map.Entry<Integer,Integer> columnAndHeight : temporaryHeights.entrySet()){
+    public void progress() {
+        for (Map.Entry<Integer, Integer> columnAndHeight : temporaryHeights.entrySet()) {
             playerHeightsPerColumn.put(columnAndHeight.getKey(), columnAndHeight.getValue());
         }
         temporaryHeights.clear();
