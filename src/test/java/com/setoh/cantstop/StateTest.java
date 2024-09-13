@@ -102,4 +102,20 @@ public class StateTest {
             }
         }
     }
+
+    @Test
+    public void testGetColumnClaimedCount() {
+        State state = new State();
+        assertThat(state.getColumnClaimedCount()).isZero();
+        state.temporaryProgress(2);
+        state.temporaryProgress(2);
+        state.temporaryProgress(2);
+        state.progress();
+        assertThat(state.getColumnClaimedCount()).isOne();
+        state.temporaryProgress(12);
+        state.temporaryProgress(12);
+        state.temporaryProgress(12);
+        state.progress();
+        assertThat(state.getColumnClaimedCount()).isEqualTo(2);
+    }
 }

@@ -15,7 +15,15 @@ public class Logic {
         this.aiPlayer = aiPlayer;
     }
 
-    public void play(State state) {
+    public State playGame(){
+        State state = new State();
+        while(state.getColumnClaimedCount() < 3){
+            playTurn(state);
+        }
+        return state;
+    }
+
+    public void playTurn(State state) {
         List<Integer> chosenColumns;
         do {
             List<Integer> dices = rollDices();
