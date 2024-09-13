@@ -52,32 +52,39 @@ public class Logic {
 
     static List<List<Integer>> getColumnsToProgress(DiceCombination combination, State state) {
         List<List<Integer>> columnList = new ArrayList<>();
-        if (canProgressOnColumn(combination.getFirstSum(), state)
-                && canProgressOnColumn(combination.getSecondSum(), state)) {
+        if (canProgressOnColumns(List.of(combination.getFirstSum(),combination.getSecondSum()), state)) {
             columnList.add(List.of(combination.getFirstSum(), combination.getSecondSum()));
         } else {
-            if (canProgressOnColumn(combination.getFirstSum(), state)) {
+            if (canProgressOnColumns(List.of(combination.getFirstSum()), state)) {
                 columnList.add(List.of(combination.getFirstSum()));
             }
-            if (canProgressOnColumn(combination.getSecondSum(), state)) {
+            if (canProgressOnColumns(List.of(combination.getSecondSum()), state)) {
                 columnList.add(List.of(combination.getSecondSum()));
             }
         }
         return columnList;
     }
 
-    static boolean canProgressOnColumn(int column, State state) {
-        if (state.isColumnClaimed(column)) {
-            return false;
+    static boolean canProgressOnColumns(List<Integer> columns, State state) {
+        for (int column : columns) {
+            if (state.isColumnClaimed(column)) {
+                return false;
+            }
         }
 
         Map<Integer, Integer> temporaryHeights = state.getTemporaryHeights();
-        if (temporaryHeights.containsKey(column)) {
-            return temporaryHeights.get(column) <= State.COLUMN_HEIGHTS.get(column);
-        }
-
-        else if (temporaryHeights.size() == 3) {
-            return false;
+        for (int column : columns) {
+            if (temporaryHeights.containsKey(column)) {
+                if (temporaryHeights.get(column) > State.COLUMN_HEIGHTS.get(column)) {
+                    return false;
+                }
+                temporaryHeights.put(column, temporaryHeights.get(column) + 1);
+            } else {
+                if (temporaryHeights.size() == 3) {
+                    return false;
+                }
+                temporaryHeights.put(column, state.getPlayerHeight(column));
+            }
         }
         return true;
     }

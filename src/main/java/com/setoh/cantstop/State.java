@@ -36,7 +36,7 @@ public class State {
     }
 
     public Map<Integer, Integer> getTemporaryHeights() {
-        return Map.copyOf(temporaryHeights);
+        return new HashMap<>(temporaryHeights);
     }
 
     public boolean isColumnClaimed(int column) {

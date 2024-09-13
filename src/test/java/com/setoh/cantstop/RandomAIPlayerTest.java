@@ -3,10 +3,7 @@ package com.setoh.cantstop;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
-
 import org.junit.Test;
-
-import com.setoh.cantstop.Logic.DiceCombination;
 
 public class RandomAIPlayerTest {
 
@@ -22,8 +19,7 @@ public class RandomAIPlayerTest {
     public void testPlays() {
         RandomAIPlayer aiPlayer = new RandomAIPlayer(0.5);
         List<Integer> columns = aiPlayer.chooseCombination(List.of(List.of(5)));
-        assertThat(columns).hasSize(1);
-        assertThat(columns).containsExactly(5);
+        assertThat(columns).hasSize(1).containsExactly(5);
     }
 
     @Test

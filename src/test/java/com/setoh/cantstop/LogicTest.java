@@ -10,7 +10,7 @@ import com.setoh.cantstop.Logic.DiceCombination;
 public class LogicTest {
 
     @Test
-    public void testValidCombinationWhenAllCombinationsAreValid() {
+    public void testColumnToProgressWhenAllCombinationsAreValid() {
         State state = new State();
         List<List<Integer>> combinations = Logic.getColumnsToProgress(List.of(1,2,3,4), state);
         assertThat(combinations).hasSize(3);
@@ -23,7 +23,7 @@ public class LogicTest {
     }
 
     @Test
-    public void testValidCombinationWhenNoCombinationIsValid() {
+    public void testColumnToProgressWhenNoCombinationIsValid() {
         State state = new State();
         state.temporaryProgress(2);
         state.temporaryProgress(2);
@@ -32,6 +32,26 @@ public class LogicTest {
         state.progress();
         List<List<Integer>> combinations = Logic.getColumnsToProgress(List.of(1, 1, 1, 1), state);
         assertThat(combinations).isEmpty();
+    }
+
+    @Test
+    public void testColumnToProgressWhenOnlyOnePairIsValid() {
+        State state = new State();
+        state.temporaryProgress(2);
+        state.temporaryProgress(2);
+        state.temporaryProgress(2);
+        state.temporaryProgress(2);
+        state.temporaryProgress(12);
+        state.temporaryProgress(12);
+        state.temporaryProgress(12);
+        state.temporaryProgress(12);
+        List<List<Integer>> combinations = Logic.getColumnsToProgress(List.of(1, 2, 3, 4), state);
+        assertThat(combinations).hasSize(5);
+        assertThat(combinations.get(0)).containsExactly(3);
+        assertThat(combinations.get(1)).containsExactly(7);
+        assertThat(combinations.get(2)).containsExactly(4);
+        assertThat(combinations.get(3)).containsExactly(6);
+        assertThat(combinations.get(4)).containsExactly(5,5);
     }
 
     @Test
@@ -45,7 +65,7 @@ public class LogicTest {
     }
 
     @Test
-    public void testCanProgressOnColumnWhenColumnClaimed() {
+    public void testCanProgressOnColumnsWhenColumnClaimed() {
         State state = new State();
         state.temporaryProgress(2);
         state.temporaryProgress(2);
@@ -53,19 +73,19 @@ public class LogicTest {
         state.temporaryProgress(2);
         state.progress();
 
-        assertThat(Logic.canProgressOnColumn(2, state)).isFalse();
+        assertThat(Logic.canProgressOnColumns(List.of(2), state)).isFalse();
     }
 
     @Test
-    public void testCanProgressOnColumnWhenColumnIsAlreadyProgressing() {
+    public void testCanProgressOnColumnsWhenColumnIsAlreadyProgressing() {
         State state = new State();
         state.temporaryProgress(2);
         state.temporaryProgress(2);
         state.temporaryProgress(2);
         state.temporaryProgress(2);
         state.temporaryProgress(5);
-        assertThat(Logic.canProgressOnColumn(2, state)).isFalse();
-        assertThat(Logic.canProgressOnColumn(5, state)).isTrue();
+        assertThat(Logic.canProgressOnColumns(List.of(2), state)).isFalse();
+        assertThat(Logic.canProgressOnColumns(List.of(5), state)).isTrue();
     }
 
     @Test
@@ -73,20 +93,20 @@ public class LogicTest {
         State state = new State();
         state.temporaryProgress(2);
         state.temporaryProgress(5);
-        assertThat(Logic.canProgressOnColumn(6, state)).isTrue();
+        assertThat(Logic.canProgressOnColumns(List.of(6), state)).isTrue();
     }
 
     @Test
-    public void testCanProgressOnColumnWhenColumnIsNotAlreadyProgressingAnd3ColumnsAreProgressing() {
+    public void testCanProgressOnColumnsWhenColumnIsNotAlreadyProgressingAnd3ColumnsAreProgressing() {
         State state = new State();
         state.temporaryProgress(2);
         state.temporaryProgress(5);
         state.temporaryProgress(7);
-        assertThat(Logic.canProgressOnColumn(6, state)).isFalse();
+        assertThat(Logic.canProgressOnColumns(List.of(6), state)).isFalse();
     }
 
     @Test
-    public void testIsCombinationValid() {
+    public void testGetColumnsToProgress() {
         State state = new State();
         state.temporaryProgress(2);
         state.temporaryProgress(5);
