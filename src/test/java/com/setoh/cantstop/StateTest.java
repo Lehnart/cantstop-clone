@@ -4,8 +4,8 @@ import org.junit.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class StateTest {
 
@@ -17,7 +17,7 @@ public class StateTest {
                 Map.entry(8, 11), Map.entry(9, 9), Map.entry(10, 7), Map.entry(11, 5), Map.entry(12, 3))).isEqualTo(
                         State.COLUMN_HEIGHTS);
         assertThat(state.getTurn()).isOne();
-        assertThat(state.columns()).isEqualTo(Set.of(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12));
+        assertThat(state.columns()).isEqualTo(List.of(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12));
         assertThat(state.getTemporaryHeights()).isEmpty();
         for (int column : state.columns()) {
             assertThat(state.getPlayerHeight(column)).isZero();

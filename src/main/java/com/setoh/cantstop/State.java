@@ -1,8 +1,8 @@
 package com.setoh.cantstop;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class State {
 
@@ -14,14 +14,15 @@ public class State {
             Map.ofEntries(
                     Map.entry(2, 0), Map.entry(3, 0), Map.entry(4, 0), Map.entry(5, 0), Map.entry(6, 0),
                     Map.entry(7, 0),
-                    Map.entry(8, 0), Map.entry(9, 0), Map.entry(10, 0), Map.entry(11, 0), Map.entry(12, 0)));
+                    Map.entry(8, 0), Map.entry(9, 0), Map.entry(10, 0), Map.entry(11, 0), Map.entry(12, 0))
+                    );
 
     private final Map<Integer, Integer> temporaryHeights = new HashMap<>();
 
     private int turn = 1;
 
-    public Set<Integer> columns() {
-        return COLUMN_HEIGHTS.keySet();
+    public List<Integer> columns() {
+        return List.of(2,3,4,5,6,7,8,9,10,11,12);
     }
 
     public int getTurn() {
@@ -52,10 +53,12 @@ public class State {
         for (Map.Entry<Integer, Integer> columnAndHeight : temporaryHeights.entrySet()) {
             playerHeightsPerColumn.put(columnAndHeight.getKey(), columnAndHeight.getValue());
         }
+        turn += 1;
         temporaryHeights.clear();
     }
 
     public void failToProgress() {
+        turn += 1;
         temporaryHeights.clear();
     }
 
