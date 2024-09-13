@@ -8,50 +8,64 @@ import org.junit.Test;
 import com.setoh.cantstop.Logic.DiceCombination;
 
 public class LogicTest {
-    
-    @Test 
-    public void testValidCombinationWhenAllCombinationsAreValid(){
+
+    @Test
+    public void testColumnToProgressWhenAllCombinationsAreValid() {
         State state = new State();
-        List<DiceCombination> combinations = Logic.validCombinations(List.of(1,2,3,4), state);
+        List<List<Integer>> combinations = Logic.getColumnsToProgress(List.of(1,2,3,4), state);
         assertThat(combinations).hasSize(3);
-        assertThat(combinations.get(0).dice1()).isEqualTo(1);
-        assertThat(combinations.get(0).dice2()).isEqualTo(2);
-        assertThat(combinations.get(0).dice3()).isEqualTo(3);
-        assertThat(combinations.get(0).dice4()).isEqualTo(4);
-        assertThat(combinations.get(1).dice1()).isEqualTo(1);
-        assertThat(combinations.get(1).dice2()).isEqualTo(3);
-        assertThat(combinations.get(1).dice3()).isEqualTo(2);
-        assertThat(combinations.get(1).dice4()).isEqualTo(4);
-        assertThat(combinations.get(2).dice1()).isEqualTo(1);
-        assertThat(combinations.get(2).dice2()).isEqualTo(4);
-        assertThat(combinations.get(2).dice3()).isEqualTo(2);
-        assertThat(combinations.get(2).dice4()).isEqualTo(3);
+        assertThat(combinations.get(0)).hasSize(2);
+        assertThat(combinations.get(0)).containsExactly(3,7);
+        assertThat(combinations.get(1)).hasSize(2);
+        assertThat(combinations.get(1)).containsExactly(4,6);
+        assertThat(combinations.get(2)).hasSize(2);
+        assertThat(combinations.get(2)).containsExactly(5,5);
     }
 
-    @Test 
-    public void testValidCombinationWhenNoCombinationIsValid(){
+    @Test
+    public void testColumnToProgressWhenNoCombinationIsValid() {
         State state = new State();
         state.temporaryProgress(2);
         state.temporaryProgress(2);
         state.temporaryProgress(2);
         state.temporaryProgress(2);
         state.progress();
-        List<DiceCombination> combinations = Logic.validCombinations(List.of(1,1,1,1), state);
+        List<List<Integer>> combinations = Logic.getColumnsToProgress(List.of(1, 1, 1, 1), state);
         assertThat(combinations).isEmpty();
     }
 
-    @Test 
-    public void testRollDice(){
+    @Test
+    public void testColumnToProgressWhenOnlyOnePairIsValid() {
+        State state = new State();
+        state.temporaryProgress(2);
+        state.temporaryProgress(2);
+        state.temporaryProgress(2);
+        state.temporaryProgress(2);
+        state.temporaryProgress(12);
+        state.temporaryProgress(12);
+        state.temporaryProgress(12);
+        state.temporaryProgress(12);
+        List<List<Integer>> combinations = Logic.getColumnsToProgress(List.of(1, 2, 3, 4), state);
+        assertThat(combinations).hasSize(5);
+        assertThat(combinations.get(0)).containsExactly(3);
+        assertThat(combinations.get(1)).containsExactly(7);
+        assertThat(combinations.get(2)).containsExactly(4);
+        assertThat(combinations.get(3)).containsExactly(6);
+        assertThat(combinations.get(4)).containsExactly(5,5);
+    }
+
+    @Test
+    public void testRollDice() {
         assertThat(Logic.rollDice()).isPositive().isLessThanOrEqualTo(6);
     }
 
-    @Test 
-    public void testRollDices(){
+    @Test
+    public void testRollDices() {
         assertThat(Logic.rollDices()).hasSize(4);
     }
 
     @Test
-    public void testCanProgressOnColumnWhenColumnClaimed() {
+    public void testCanProgressOnColumnsWhenColumnClaimed() {
         State state = new State();
         state.temporaryProgress(2);
         state.temporaryProgress(2);
@@ -59,19 +73,19 @@ public class LogicTest {
         state.temporaryProgress(2);
         state.progress();
 
-        assertThat(Logic.canProgressOnColumn(2, state)).isFalse();
+        assertThat(Logic.canProgressOnColumns(List.of(2), state)).isFalse();
     }
-    
+
     @Test
-    public void testCanProgressOnColumnWhenColumnIsAlreadyProgressing() {
+    public void testCanProgressOnColumnsWhenColumnIsAlreadyProgressing() {
         State state = new State();
         state.temporaryProgress(2);
         state.temporaryProgress(2);
         state.temporaryProgress(2);
         state.temporaryProgress(2);
         state.temporaryProgress(5);
-        assertThat(Logic.canProgressOnColumn(2, state)).isFalse();
-        assertThat(Logic.canProgressOnColumn(5, state)).isTrue();        
+        assertThat(Logic.canProgressOnColumns(List.of(2), state)).isFalse();
+        assertThat(Logic.canProgressOnColumns(List.of(5), state)).isTrue();
     }
 
     @Test
@@ -79,28 +93,28 @@ public class LogicTest {
         State state = new State();
         state.temporaryProgress(2);
         state.temporaryProgress(5);
-        assertThat(Logic.canProgressOnColumn(6, state)).isTrue();        
+        assertThat(Logic.canProgressOnColumns(List.of(6), state)).isTrue();
     }
 
     @Test
-    public void testCanProgressOnColumnWhenColumnIsNotAlreadyProgressingAnd3ColumnsAreProgressing() {
+    public void testCanProgressOnColumnsWhenColumnIsNotAlreadyProgressingAnd3ColumnsAreProgressing() {
         State state = new State();
         state.temporaryProgress(2);
         state.temporaryProgress(5);
         state.temporaryProgress(7);
-        assertThat(Logic.canProgressOnColumn(6, state)).isFalse();        
+        assertThat(Logic.canProgressOnColumns(List.of(6), state)).isFalse();
     }
 
     @Test
-    public void testIsCombinationValid() {
+    public void testGetColumnsToProgress() {
         State state = new State();
         state.temporaryProgress(2);
         state.temporaryProgress(5);
         state.temporaryProgress(7);
-        assertThat(Logic.isCombinationValid(new DiceCombination(1,2,2,2), state)).isFalse();
-        assertThat(Logic.isCombinationValid(new DiceCombination(1,2,2,3), state)).isTrue();
-        assertThat(Logic.isCombinationValid(new DiceCombination(1,1,2,2), state)).isTrue();
-        assertThat(Logic.isCombinationValid(new DiceCombination(1,1,2,3), state)).isTrue();
+        assertThat(Logic.getColumnsToProgress(new DiceCombination(1, 2, 2, 2), state)).isEmpty();
+        assertThat(Logic.getColumnsToProgress(new DiceCombination(1, 2, 2, 3), state)).isNotEmpty();
+        assertThat(Logic.getColumnsToProgress(new DiceCombination(1, 1, 2, 2), state)).isNotEmpty();
+        assertThat(Logic.getColumnsToProgress(new DiceCombination(1, 1, 2, 3), state)).isNotEmpty();
     }
 
     @Test
@@ -114,14 +128,22 @@ public class LogicTest {
         assertThat(diceCombination.getSecondSum()).isEqualTo(7);
     }
 
-    @Test 
-    public void testPlay(){
+    @Test
+    public void testPlayAlwaysFail() {
         State state = new State();
-        Logic logic = new Logic();
-        DiceCombination combination = logic.play(state);
-        assertThat(combination.dice1()).isPositive().isLessThanOrEqualTo(6);
-        assertThat(combination.dice2()).isPositive().isLessThanOrEqualTo(6);
-        assertThat(combination.dice3()).isPositive().isLessThanOrEqualTo(6);
-        assertThat(combination.dice4()).isPositive().isLessThanOrEqualTo(6); 
+        Logic logic = new Logic(new RandomAIPlayer(1.));
+        logic.play(state);
+        for (int column : state.columns()) {
+            assertThat(state.getPlayerHeight(column)).isZero();
+        }
     }
+
+    @Test
+    public void testPlayAlwaysStop() {
+        State state = new State();
+        Logic logic = new Logic(new RandomAIPlayer(0.));
+        logic.play(state);
+        assertThat(state.columns().stream().map(c -> state.getPlayerHeight(c)).anyMatch(h -> h > 0)).isTrue();
+    }
+
 }

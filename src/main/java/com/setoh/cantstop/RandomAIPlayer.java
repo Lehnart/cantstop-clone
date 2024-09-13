@@ -3,21 +3,23 @@ package com.setoh.cantstop;
 import java.util.List;
 import java.util.Random;
 
-import com.setoh.cantstop.Logic.DiceCombination;
-
 public class RandomAIPlayer {
-    
+
     private Random random = new Random();
     private double continuingProbability;
 
-    public RandomAIPlayer(double probability){
+    public RandomAIPlayer(double probability) {
         continuingProbability = probability;
     }
-    public DiceCombination chooseCombination(List<DiceCombination> combinations ){
-        return combinations.get(random.nextInt(combinations.size()));
+
+    public List<Integer> chooseCombination(List<List<Integer>> columnsToProgress) {
+        if (columnsToProgress.isEmpty()) {
+            return List.of();
+        }
+        return columnsToProgress.get(random.nextInt(columnsToProgress.size()));
     }
 
-    public boolean shouldContinue(){
-        return random.nextDouble() > continuingProbability;
+    public boolean shouldContinue() {
+        return random.nextDouble() < continuingProbability;
     }
 }
