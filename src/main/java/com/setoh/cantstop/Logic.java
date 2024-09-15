@@ -7,9 +7,13 @@ import java.util.Random;
 
 public class Logic {
 
+    public static final String CSV_FILE_NAME = "output.log";
+    
     private static Random random = new Random();
 
     private RandomAIPlayer aiPlayer;
+
+    private CSVWriter csvWriter = new CSVWriter();
 
     public Logic(RandomAIPlayer aiPlayer) {
         this.aiPlayer = aiPlayer;
@@ -20,27 +24,40 @@ public class Logic {
         while(state.getColumnClaimedCount() < 3){
             playTurn(state);
         }
+        csvWriter.write(CSV_FILE_NAME);
         return state;
     }
 
     public void playTurn(State state) {
         List<Integer> chosenColumns;
+        boolean shouldContinue;
         do {
-            List<Integer> dices = rollDices();
-            List<List<Integer>> columnsToProgress = getColumnsToProgress(dices, state);
-            chosenColumns = aiPlayer.chooseCombination(columnsToProgress);
-            if (!chosenColumns.isEmpty()) {
-                for (int column : chosenColumns) {
-                    state.temporaryProgress(column);
-                }
-            }
-        } while (!chosenColumns.isEmpty() && aiPlayer.shouldContinue());
+            chosenColumns = playColumnChoice(state);
+            shouldContinue = aiPlayer.shouldContinue();
+            csvWriter.addPlayerChoice(shouldContinue);
+            csvWriter.saveTurn();
+        } while (!chosenColumns.isEmpty() && shouldContinue);
 
         if (!chosenColumns.isEmpty()) {
             state.progress();
         } else {
             state.failToProgress();
         }
+    }
+
+    private List<Integer> playColumnChoice(State state) {
+        csvWriter.addBoardState(state);
+        List<Integer> dices = rollDices();
+        csvWriter.addDiceResult(dices);
+        List<List<Integer>> columnsToProgress = getColumnsToProgress(dices, state);
+        List<Integer> chosenColumns = aiPlayer.chooseCombination(columnsToProgress);
+        csvWriter.addChosenColumns(chosenColumns);
+        if (!chosenColumns.isEmpty()) {
+            for (int column : chosenColumns) {
+                state.temporaryProgress(column);
+            }
+        }
+        return chosenColumns;
     }
 
     public static List<List<Integer>> getColumnsToProgress(List<Integer> dices, State state) {
