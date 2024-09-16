@@ -1,12 +1,18 @@
 package com.setoh.cantstop;
 
-import org.junit.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
 import java.util.List;
 
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
+
 public class CSVWriterTest {
+
+    @Rule
+    public TemporaryFolder folder = TemporaryFolder.builder().assureDeletion().build();
 
     @Test
     public void testAddBoardState() {
@@ -56,14 +62,14 @@ public class CSVWriterTest {
     }
 
     @Test
-    public void testWrite() {
+    public void testWrite( ) {
         CSVWriter csvWriter = new CSVWriter();
         csvWriter.addPlayerChoice(true);
         csvWriter.saveTurn();
         csvWriter.addPlayerChoice(false);
         csvWriter.saveTurn();
-        csvWriter.write(Logic.CSV_FILE_NAME);
-        File output = new File(Logic.CSV_FILE_NAME);
+        csvWriter.write(folder.getRoot() +"/"+"output.log");
+        File output = new File(folder.getRoot() +"/"+ "output.log");
         assertThat(output).exists().isNotEmpty().hasContent("true,\nfalse,\n");
     }
 }
