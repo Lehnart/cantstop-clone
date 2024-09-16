@@ -7,8 +7,6 @@ import java.util.Random;
 
 public class Logic {
 
-    public static final String CSV_FILE_NAME = "output.log";
-    
     private static Random random = new Random();
 
     private RandomAIPlayer aiPlayer;
@@ -19,12 +17,12 @@ public class Logic {
         this.aiPlayer = aiPlayer;
     }
 
-    public State playGame(){
+    public State playGame(String csvFileName){
         State state = new State();
         while(state.getColumnClaimedCount() < 3){
             playTurn(state);
         }
-        csvWriter.write(CSV_FILE_NAME);
+        csvWriter.write(csvFileName);
         return state;
     }
 

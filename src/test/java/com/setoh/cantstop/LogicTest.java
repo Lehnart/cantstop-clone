@@ -149,7 +149,7 @@ public class LogicTest {
     @Test
     public void testPlayGame() {
         Logic logic = new Logic(new RandomAIPlayer(0.5));
-        State state = logic.playGame();
+        State state = logic.playGame("output.log");
         assertThat(state.getColumnClaimedCount()).isGreaterThanOrEqualTo(3);
     }
 
