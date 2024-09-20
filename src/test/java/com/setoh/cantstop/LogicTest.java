@@ -2,12 +2,19 @@ package com.setoh.cantstop;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.io.File;
 import java.util.List;
+
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 import com.setoh.cantstop.Logic.DiceCombination;
 
 public class LogicTest {
+
+    @Rule
+    public TemporaryFolder folder = TemporaryFolder.builder().assureDeletion().build();
 
     @Test
     public void testColumnToProgressWhenAllCombinationsAreValid() {
@@ -131,7 +138,7 @@ public class LogicTest {
     @Test
     public void testPlayTurnAlwaysFail() {
         State state = new State();
-        Logic logic = new Logic(new RandomAIPlayer(1.));
+        Logic logic = new Logic(new RandomAIPlayer(1.), null);
         logic.playTurn(state);
         for (int column : state.columns()) {
             assertThat(state.getPlayerHeight(column)).isZero();
@@ -141,16 +148,27 @@ public class LogicTest {
     @Test
     public void testPlayTurnAlwaysStop() {
         State state = new State();
-        Logic logic = new Logic(new RandomAIPlayer(0.));
+        Logic logic = new Logic(new RandomAIPlayer(0.), null);
         logic.playTurn(state);
         assertThat(state.columns().stream().map(c -> state.getPlayerHeight(c)).anyMatch(h -> h > 0)).isTrue();
     }
 
     @Test
-    public void testPlayGame() {
-        Logic logic = new Logic(new RandomAIPlayer(0.5));
+    public void testPlayGameWithoutOutput() {
+        Logic logic = new Logic(new RandomAIPlayer(0.8), null);
         State state = logic.playGame("output.log");
         assertThat(state.getColumnClaimedCount()).isGreaterThanOrEqualTo(3);
+        assertThat(folder.getRoot()).isEmptyDirectory();
+    }
+
+    @Test
+    public void testPlayGameWithOutput() {
+        Logic logic = new Logic(new RandomAIPlayer(0.8), new CSVWriter());
+        State state = logic.playGame(folder.getRoot().toString() + "/output.log");
+        assertThat(state.getColumnClaimedCount()).isGreaterThanOrEqualTo(3);
+        assertThat(folder.getRoot()).isNotEmptyDirectory();
+        File output = new File(folder.getRoot() +"/"+ "output.log");
+        assertThat(output).exists().isNotEmpty();
     }
 
 }
