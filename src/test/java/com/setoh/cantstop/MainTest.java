@@ -16,8 +16,8 @@ public class MainTest {
     public TemporaryFolder folder = TemporaryFolder.builder().assureDeletion().build();
 
     @Test
-    public void testMain(){
-        main(new String[]{folder.getRoot().toString(),"5"});
+    public void testMainWithGameCountAndOutputPath(){
+        main(new String[]{"5", folder.getRoot().toString()});
         assertThat(folder.getRoot()).exists().isNotEmptyDirectory();
         assertThat(folder.getRoot().listFiles()).hasSize(5);
         assertThat(Arrays.stream(folder.getRoot().listFiles()).map(f -> f.getName()).toList()).containsExactlyInAnyOrder(
@@ -27,11 +27,18 @@ public class MainTest {
             assertThat(file).isNotEmpty();
         }
     }
-    
+
+    @Test
+    public void testMainWithGameCountOnly(){
+        main(new String[]{"5"});
+        assertThat(folder.getRoot()).exists().isEmptyDirectory();
+    }
+
+
     @Test
     public void testMainWithoutArgs(){
         assertThatThrownBy( () -> main(new String[]{}))
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessageContaining("2 arguments are expected: outputPath and gameCount");
+        .hasMessageContaining("At least 1 argument is expected: gameCount [outputPath]");
     }
 }

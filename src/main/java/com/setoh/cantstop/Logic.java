@@ -13,8 +13,9 @@ public class Logic {
 
     private CSVWriter csvWriter = new CSVWriter();
 
-    public Logic(RandomAIPlayer aiPlayer) {
+    public Logic(RandomAIPlayer aiPlayer, CSVWriter csvWriter) {
         this.aiPlayer = aiPlayer;
+        this.csvWriter = csvWriter;
     }
 
     public State playGame(String csvFileName){
@@ -22,7 +23,9 @@ public class Logic {
         while(state.getColumnClaimedCount() < 3){
             playTurn(state);
         }
-        csvWriter.write(csvFileName);
+        if(csvWriter != null){
+            csvWriter.write(csvFileName);
+        } 
         return state;
     }
 
@@ -32,8 +35,10 @@ public class Logic {
         do {
             chosenColumns = playColumnChoice(state);
             shouldContinue = aiPlayer.shouldContinue();
-            csvWriter.addPlayerChoice(shouldContinue);
-            csvWriter.saveTurn();
+            if(csvWriter != null){
+                csvWriter.addPlayerChoice(shouldContinue);
+                csvWriter.saveTurn();
+            }
         } while (!chosenColumns.isEmpty() && shouldContinue);
 
         if (!chosenColumns.isEmpty()) {
@@ -44,12 +49,14 @@ public class Logic {
     }
 
     private List<Integer> playColumnChoice(State state) {
-        csvWriter.addBoardState(state);
         List<Integer> dices = rollDices();
-        csvWriter.addDiceResult(dices);
         List<List<Integer>> columnsToProgress = getColumnsToProgress(dices, state);
         List<Integer> chosenColumns = aiPlayer.chooseCombination(columnsToProgress);
-        csvWriter.addChosenColumns(chosenColumns);
+        if(csvWriter != null){
+            csvWriter.addBoardState(state);
+            csvWriter.addDiceResult(dices);
+            csvWriter.addChosenColumns(chosenColumns);
+        }
         if (!chosenColumns.isEmpty()) {
             for (int column : chosenColumns) {
                 state.temporaryProgress(column);
