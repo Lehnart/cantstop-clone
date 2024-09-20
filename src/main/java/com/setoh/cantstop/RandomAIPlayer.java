@@ -6,7 +6,7 @@ import java.util.Random;
 public class RandomAIPlayer {
 
     private Random random = new Random();
-    private double continuingProbability;
+    private final double continuingProbability;
 
     public RandomAIPlayer(double probability) {
         continuingProbability = probability;
