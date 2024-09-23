@@ -3,12 +3,12 @@ package com.setoh.cantstop;
 import java.util.List;
 import java.util.Random;
 
-public class RandomAIPlayer {
+public class RandomContinuingProbabilityAIPlayer {
 
     private Random random = new Random();
     private final double continuingProbability;
 
-    public RandomAIPlayer(double probability) {
+    public RandomContinuingProbabilityAIPlayer(double probability) {
         continuingProbability = probability;
     }
 

@@ -34,7 +34,7 @@ public class Main {
         for(float proba = start; proba <= stop; proba += step){
             probabilities.add(proba);
         }
-        float optimalProbability = new RandomAIPlayerOptimizer().optimize(gameCount, probabilities);
+        float optimalProbability = new RandomContinuingProbabilityAIPlayerOptimizer().optimize(gameCount, probabilities);
         System.out.println("Optimal probability is " + optimalProbability);
         return optimalProbability;
     }
@@ -51,7 +51,7 @@ public class Main {
            outputPath = args[2];        
         }
         for(int i = 1; i <=gameCount; i++){
-            Logic logic = new Logic(new RandomAIPlayer(0.8), outputPath == null ? null : new CSVWriter());
+            Logic logic = new Logic(new RandomContinuingProbabilityAIPlayer(0.8), outputPath == null ? null : new CSVWriter());
             logic.playGame(outputPath + "/output_"+i+".log");
         }
 

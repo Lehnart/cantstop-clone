@@ -138,7 +138,7 @@ public class LogicTest {
     @Test
     public void testPlayTurnAlwaysFail() {
         State state = new State();
-        Logic logic = new Logic(new RandomAIPlayer(1.), null);
+        Logic logic = new Logic(new RandomContinuingProbabilityAIPlayer(1.), null);
         logic.playTurn(state);
         for (int column : state.columns()) {
             assertThat(state.getPlayerHeight(column)).isZero();
@@ -148,14 +148,14 @@ public class LogicTest {
     @Test
     public void testPlayTurnAlwaysStop() {
         State state = new State();
-        Logic logic = new Logic(new RandomAIPlayer(0.), null);
+        Logic logic = new Logic(new RandomContinuingProbabilityAIPlayer(0.), null);
         logic.playTurn(state);
         assertThat(state.columns().stream().map(c -> state.getPlayerHeight(c)).anyMatch(h -> h > 0)).isTrue();
     }
 
     @Test
     public void testPlayGameWithoutOutput() {
-        Logic logic = new Logic(new RandomAIPlayer(0.8), null);
+        Logic logic = new Logic(new RandomContinuingProbabilityAIPlayer(0.8), null);
         State state = logic.playGame("output.log");
         assertThat(state.getColumnClaimedCount()).isGreaterThanOrEqualTo(3);
         assertThat(folder.getRoot()).isEmptyDirectory();
@@ -163,7 +163,7 @@ public class LogicTest {
 
     @Test
     public void testPlayGameWithOutput() {
-        Logic logic = new Logic(new RandomAIPlayer(0.8), new CSVWriter());
+        Logic logic = new Logic(new RandomContinuingProbabilityAIPlayer(0.8), new CSVWriter());
         State state = logic.playGame(folder.getRoot().toString() + "/output.log");
         assertThat(state.getColumnClaimedCount()).isGreaterThanOrEqualTo(3);
         assertThat(folder.getRoot()).isNotEmptyDirectory();

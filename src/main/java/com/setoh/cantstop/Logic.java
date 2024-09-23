@@ -9,11 +9,11 @@ public class Logic {
 
     private static Random random = new Random();
 
-    private RandomAIPlayer aiPlayer;
+    private RandomContinuingProbabilityAIPlayer aiPlayer;
 
     private CSVWriter csvWriter = new CSVWriter();
 
-    public Logic(RandomAIPlayer aiPlayer, CSVWriter csvWriter) {
+    public Logic(RandomContinuingProbabilityAIPlayer aiPlayer, CSVWriter csvWriter) {
         this.aiPlayer = aiPlayer;
         this.csvWriter = csvWriter;
     }
