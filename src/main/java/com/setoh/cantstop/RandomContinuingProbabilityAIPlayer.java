@@ -19,7 +19,7 @@ public class RandomContinuingProbabilityAIPlayer {
         return columnsToProgress.get(random.nextInt(columnsToProgress.size()));
     }
 
-    public boolean shouldContinue() {
+    public boolean shouldContinue(State state) {
         return random.nextDouble() < continuingProbability;
     }
 }

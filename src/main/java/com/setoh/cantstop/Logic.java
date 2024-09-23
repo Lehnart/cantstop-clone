@@ -34,7 +34,7 @@ public class Logic {
         boolean shouldContinue;
         do {
             chosenColumns = playColumnChoice(state);
-            shouldContinue = aiPlayer.shouldContinue();
+            shouldContinue = aiPlayer.shouldContinue(state);
             if(csvWriter != null){
                 csvWriter.addPlayerChoice(shouldContinue);
                 csvWriter.saveTurn();
