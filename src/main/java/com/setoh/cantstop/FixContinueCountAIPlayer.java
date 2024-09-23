@@ -3,13 +3,16 @@ package com.setoh.cantstop;
 import java.util.List;
 import java.util.Random;
 
-public class RandomContinuingProbabilityAIPlayer extends AIPlayer{
+public class FixContinueCountAIPlayer extends AIPlayer{
+
+    private final int continuingTurns;
+    int lastTurn = -1;
+    int turnCount = 0; 
 
     private Random random = new Random();
-    private final double continuingProbability;
 
-    public RandomContinuingProbabilityAIPlayer(double probability) {
-        continuingProbability = probability;
+    public FixContinueCountAIPlayer(int continuingTurns) {
+        this.continuingTurns = continuingTurns;
     }
 
     @Override
@@ -22,6 +25,13 @@ public class RandomContinuingProbabilityAIPlayer extends AIPlayer{
 
     @Override
     public boolean shouldContinue(State state) {
-        return random.nextDouble() < continuingProbability;
+        if(state.getTurn()==lastTurn){
+            turnCount++;
+        }
+        else{
+            turnCount=1;
+            lastTurn = state.getTurn();
+        }
+        return turnCount <= continuingTurns;
     }
 }

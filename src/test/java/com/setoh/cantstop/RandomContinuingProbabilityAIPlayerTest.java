@@ -10,9 +10,9 @@ public class RandomContinuingProbabilityAIPlayerTest {
     @Test
     public void testShouldContinue() {
         RandomContinuingProbabilityAIPlayer alwaysStoppingAi = new RandomContinuingProbabilityAIPlayer(1.001);
-        assertThat(alwaysStoppingAi.shouldContinue()).isTrue();
+        assertThat(alwaysStoppingAi.shouldContinue(new State())).isTrue();
         RandomContinuingProbabilityAIPlayer alwaysContinuingAi = new RandomContinuingProbabilityAIPlayer(0.);
-        assertThat(alwaysContinuingAi.shouldContinue()).isFalse();
+        assertThat(alwaysContinuingAi.shouldContinue(new State())).isFalse();
     }
 
     @Test

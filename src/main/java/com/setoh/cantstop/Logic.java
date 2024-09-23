@@ -9,11 +9,11 @@ public class Logic {
 
     private static Random random = new Random();
 
-    private RandomContinuingProbabilityAIPlayer aiPlayer;
+    private AIPlayer aiPlayer;
 
     private CSVWriter csvWriter = new CSVWriter();
 
-    public Logic(RandomContinuingProbabilityAIPlayer aiPlayer, CSVWriter csvWriter) {
+    public Logic(AIPlayer aiPlayer, CSVWriter csvWriter) {
         this.aiPlayer = aiPlayer;
         this.csvWriter = csvWriter;
     }
@@ -34,7 +34,7 @@ public class Logic {
         boolean shouldContinue;
         do {
             chosenColumns = playColumnChoice(state);
-            shouldContinue = aiPlayer.shouldContinue();
+            shouldContinue = aiPlayer.shouldContinue(state);
             if(csvWriter != null){
                 csvWriter.addPlayerChoice(shouldContinue);
                 csvWriter.saveTurn();
