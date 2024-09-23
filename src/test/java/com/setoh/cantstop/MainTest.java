@@ -12,12 +12,39 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import java.io.File;
 
 public class MainTest {
-     @Rule
+    @Rule
     public TemporaryFolder folder = TemporaryFolder.builder().assureDeletion().build();
 
     @Test
-    public void testMainWithGameCountAndOutputPath(){
-        main(new String[]{"5", folder.getRoot().toString()});
+    public void testMainWithoutArgs(){
+        assertThatThrownBy( () -> main(new String[]{}))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("First argument should be a command --run, --optimize");
+    }
+
+    @Test
+    public void testMainWithUnknownCommand(){
+        assertThatThrownBy( () -> main(new String[]{"--unknownCommand"}))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("Command --unknownCommand is unknown.");
+    }
+
+    @Test
+    public void testMainRunWithoutArsg(){
+        assertThatThrownBy( () -> main(new String[]{"--run"}))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("At least 1 argument is expected: --run gameCount [outputPath]");
+    }
+
+    @Test
+    public void testMainRunWithGameCountOnly(){
+        main(new String[]{"--run","5"});
+        assertThat(folder.getRoot()).exists().isEmptyDirectory();
+    }
+
+    @Test
+    public void testMainRunWithGameCountAndOutputPath(){
+        main(new String[]{"--run", "5", folder.getRoot().toString()});
         assertThat(folder.getRoot()).exists().isNotEmptyDirectory();
         assertThat(folder.getRoot().listFiles()).hasSize(5);
         assertThat(Arrays.stream(folder.getRoot().listFiles()).map(f -> f.getName()).toList()).containsExactlyInAnyOrder(
@@ -29,16 +56,15 @@ public class MainTest {
     }
 
     @Test
-    public void testMainWithGameCountOnly(){
-        main(new String[]{"5"});
-        assertThat(folder.getRoot()).exists().isEmptyDirectory();
+    public void testMainOptimizeWithoutArgs(){
+        assertThatThrownBy( () -> main(new String[]{"--optimize"}))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("At least 4 arguments are expected: --optimize gameCount start stop step");
     }
 
-
     @Test
-    public void testMainWithoutArgs(){
-        assertThatThrownBy( () -> main(new String[]{}))
-        .isInstanceOf(IllegalArgumentException.class)
-        .hasMessageContaining("At least 1 argument is expected: gameCount [outputPath]");
+    public void testMainOptimize(){
+        float optimalProbability = Main.optimize(new String[]{"--optimize",  "100", "0.1", "1.","0.6"});
+        assertThat(optimalProbability).isBetween(0.65f, 0.75f);
     }
 }
