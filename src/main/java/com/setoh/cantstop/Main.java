@@ -23,19 +23,34 @@ public class Main {
     }
 
     static float optimize(String[] args){
-        if (args.length < 5){
-            throw new IllegalArgumentException("At least 4 arguments are expected: --optimize gameCount start stop step");
+        if (args.length < 6){
+            throw new IllegalArgumentException("At least 5 arguments are expected: --optimize aiName gameCount start stop step");
         }
-        int gameCount = Integer.parseInt(args[1]);
-        float start = Float.parseFloat(args[2]);
-        float stop = Float.parseFloat(args[3]);
-        float step = Float.parseFloat(args[4]);
-        List<Float> probabilities = new ArrayList<>();
-        for(float proba = start; proba <= stop; proba += step){
-            probabilities.add(proba);
+        String aiName = args[1];
+        int gameCount = Integer.parseInt(args[2]);
+        Float optimalProbability = -1.f;
+        if (aiName.equals("RandomContinuingProbabilityAIPlayer")){
+            List<Float> probabilities = new ArrayList<>();
+            float start = Float.parseFloat(args[3]);
+            float stop = Float.parseFloat(args[4]);
+            float step = Float.parseFloat(args[5]);
+            for(float proba = start; proba <= stop; proba += step){
+                probabilities.add(proba);
+            }
+            optimalProbability = new RandomContinuingProbabilityAIPlayerOptimizer().optimize(gameCount, probabilities);
         }
-        float optimalProbability = new RandomContinuingProbabilityAIPlayerOptimizer().optimize(gameCount, probabilities);
-        System.out.println("Optimal probability is " + optimalProbability);
+        else if (aiName.equals("FixContinueCountAIPlayer")){
+            List<Integer> turns = new ArrayList<>();
+            int start = Integer.parseInt(args[3]);
+            int stop = Integer.parseInt(args[4]);
+            int step = Integer.parseInt(args[5]);
+            for(int turn = start; turn <= stop; turn += step){
+                turns.add(turn);
+            }
+            optimalProbability = (float) new FixContinueCountAIPlayerOptimizer().optimize(gameCount, turns);
+        }
+        
+        System.out.println("Optimal is " + optimalProbability);
         return optimalProbability;
     }
 
