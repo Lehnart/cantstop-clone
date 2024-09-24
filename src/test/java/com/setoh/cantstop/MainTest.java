@@ -59,12 +59,18 @@ public class MainTest {
     public void testMainOptimizeWithoutArgs(){
         assertThatThrownBy( () -> main(new String[]{"--optimize"}))
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("At least 4 arguments are expected: --optimize gameCount start stop step");
+        .hasMessage("At least 5 arguments are expected: --optimize aiName gameCount start stop step");
     }
 
     @Test
-    public void testMainOptimize(){
-        float optimalProbability = Main.optimize(new String[]{"--optimize",  "100", "0.1", "1.","0.6"});
+    public void testMainRandomOptimize(){
+        float optimalProbability = Main.optimize(new String[]{"--optimize", "RandomContinuingProbabilityAIPlayer", "100", "0.1", "1.","0.6"});
         assertThat(optimalProbability).isBetween(0.65f, 0.75f);
+    }
+
+    @Test
+    public void testMainFixOptimize(){
+        float optimalProbability = Main.optimize(new String[]{"--optimize", "FixContinueCountAIPlayer", "100", "1", "3","2"});
+        assertThat(optimalProbability).isBetween(2.5f, 3.5f);
     }
 }
