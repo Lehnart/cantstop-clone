@@ -2,7 +2,6 @@ package com.setoh.cantstop;
 
 import java.util.List;
 import java.util.Random;
-import java.util.Map;
 
 public class TemporaryProgressAIPlayer extends AIPlayer{
 
