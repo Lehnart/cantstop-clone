@@ -42,6 +42,24 @@ public class StateTest {
     }
 
     @Test
+    public void testTemporaryHeight() {
+        State state = new State();
+        for(int column : state.columns()){
+            assertThat(state.getTemporaryHeight(column)).isZero();
+        }
+        state.temporaryProgress(2);
+        for(int column : state.columns()){
+            if(column==2){
+                assertThat(state.getTemporaryHeight(column)).isEqualTo(1);
+            }
+            else{
+                assertThat(state.getTemporaryHeight(column)).isZero();
+            }
+        }
+    }
+
+
+    @Test
     public void testProgress() {
         State state = new State();
         assertThat(state.getTemporaryHeights()).isEmpty();
