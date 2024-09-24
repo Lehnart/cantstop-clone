@@ -40,6 +40,14 @@ public class State {
         return new HashMap<>(temporaryHeights);
     }
 
+    public int getTemporaryHeight(int column) {
+        if(temporaryHeights.containsKey(column)){
+            return temporaryHeights.get(column);
+        }
+        return 0;
+    }
+
+
     public boolean isColumnClaimed(int column) {
         return getPlayerHeight(column) >= COLUMN_HEIGHTS.get(column);
     }
